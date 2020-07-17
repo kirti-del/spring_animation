@@ -1,0 +1,53 @@
+<!-HTML-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Animation</title>
+  <link href="./animation.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <h1>Animation</h1>
+  <div class="box"></div>
+
+  <script src="https://unpkg.com/popmotion@8.1.24/dist/popmotion.global.min.js"></script>
+  <script src="./animation.js"></script>
+</body>
+</html>
+/*css*/
+.box {
+    width: 100px;
+    height: 100px;
+    background-color: #0074d9;
+    border-radius: 50%;
+  }
+  
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 400px;
+  }
+  //javascript
+  
+const ball = document.querySelector(".box");
+const divStyler = popmotion.styler(ball);
+const ballXY = popmotion.value({ x: 0, y: 0 }, divStyler.set);
+
+popmotion.listen(ball, "mousedown touchstart").start(e => {
+  e.preventDefault();
+  popmotion.pointer(ballXY.get()).start(ballXY);
+});
+
+popmotion.listen(document, "mouseup").start(() => {
+  popmotion
+    .spring({
+      from: ballXY.get(),
+      velocity: ballXY.getVelocity(),
+      to: { x: 0, y: 0 },
+      stiffness: 200
+    })
+    .start(ballXY);
+});
